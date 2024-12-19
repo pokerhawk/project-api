@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: Delivery-DB
+    restart: always
+    environment:
+      POSTGRES_USER: DeliveryDB
+      POSTGRES_PASSWORD: DeliveryDB@2024
+      POSTGRES_DB: DeliveryDB
+    volumes:
+      - postgres:/var/lib/postgres/data
+    ports:
+      - "5432:5432"
+
+#   api:
+#     container_name: backend-app
+#     build: ./backend
+#     restart: unless-stopped
+#     environment:
+#       DATABASE_URL: "postgres://AmericanADMIN:AmericanFit@2024@postgres:5432/AmericanFit"
+#     ports:
+#       - 8080:8080
+#     depends_on:
+#       - postgres
+#     # env_file:
+#     #   - ./backend/.env
+
+#   frontend:
+#     container_name: frontend-app
+#     build: ./frontend
+#     restart: unless-stopped
+#     # environment:
+#     #   VITE_BASE_URL: "http://localhost:8080"
+#     ports:
+#       - 3000:3000
+#     depends_on:
+#       - api
+#     # env_file:
+#     #   - ./frontend/.env
+#     volumes:
+#       - frontend:/var/www/html
+
+#   nginx:
+#     container_name: nginx-server
+#     build: ./nginx
+#     ports:
+#       - 80:80
+#       # - 443:443
+#     volumes:
+#       - frontend:/var/www/html
+#     depends_on:
+#       - postgres
+#       - api
+#       - frontend
+
+volumes:
+  postgres:
+  # frontend:

@@ -1,0 +1,6 @@
+.env
+/prisma/generated
+/prisma/migrations
+/dist
+/node_modules
+yarn.lock

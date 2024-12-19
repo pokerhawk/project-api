@@ -1,0 +1,82 @@
+generator client {
+    provider      = "prisma-client-js"
+    output        = "./generated/client"
+    binaryTargets = ["native", "rhel-openssl-1.0.x"]//if you use windows you must specify it here (, "windows")
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id                      String          @id @default(uuid())
+    accountAccess           AccountAccess   @default(user)
+    name                    String
+    email                   String          @unique
+    password                String
+    mfaEnabled              Boolean         @default(false)
+    mfaSecret               String?
+    commission              Int             @default(10)
+    potLimit                Int             @default(20)
+    createdAt               DateTime        @default(now())
+    updatedAt               DateTime        @updatedAt
+    deletedAt               DateTime?
+    Sale                    Sale[]
+}
+
+model ClientAddress {
+    id              String      @id @default(uuid())
+    name            String
+    phone           String
+    zipcode         String
+    address         String
+    number          String
+    neighborhood    String
+    city            String
+    state           String
+    complement      String
+    deliveryDate    DateTime?   @db.Date
+    sale            Sale[]
+}
+
+model Sale {
+    id                      String          @id @default(uuid())
+    saleDate                DateTime?       @db.Date
+    transactionValue        Int
+    commissionValue         Int
+    paymentMethod           String
+    quantity                Int
+    status                  SaleStatus      @default(pending)
+    createdAt               DateTime        @default(now())
+    updatedAt               DateTime        @updatedAt
+    deletedAt               DateTime?
+    user                    User?           @relation(fields: [userId], references: [id])
+    userId                  String?
+    clientAddress           ClientAddress?  @relation(fields: [clientAddressId], references: [id])
+    clientAddressId         String?
+}
+
+
+model Product { //Não esta em uso nem ligada
+    id          String    @id @default(uuid())
+    name        String
+    price       String
+    inStock     Int
+    reserved    Int
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
+}
+
+enum SaleStatus {
+    pending
+    confirmed
+    denied
+}
+
+enum AccountAccess {
+    admin
+    business
+    user
+}
