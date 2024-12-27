@@ -13,11 +13,13 @@ RUN rm -rf node_modules
 
 RUN yarn
 
-#RUN npx prisma db pull
+# RUN npx prisma db pull
 
 RUN npx prisma generate
 
-#RUN npx prisma migrate dev
+RUN npx prisma migrate deploy
+
+# RUN npx prisma migrate dev
 
 #RUN apk add --no-cache bash
 

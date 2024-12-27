@@ -14,7 +14,7 @@ services:
 
   api:
     container_name: backend-app
-    build: ./
+    build: ./ #build this directory where Dockerfile is
     restart: unless-stopped
     # environment:
     #   DATABASE_URL: "postgres://DeliveryDB:DeliveryDB@2024@localhost:5432/DeliveryDB"
