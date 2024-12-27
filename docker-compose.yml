@@ -12,18 +12,18 @@ services:
     ports:
       - "5432:5432"
 
-#   api:
-#     container_name: backend-app
-#     build: ./backend
-#     restart: unless-stopped
-#     environment:
-#       DATABASE_URL: "postgres://AmericanADMIN:AmericanFit@2024@postgres:5432/AmericanFit"
-#     ports:
-#       - 8080:8080
-#     depends_on:
-#       - postgres
-#     # env_file:
-#     #   - ./backend/.env
+  api:
+    container_name: backend-app
+    build: ./
+    restart: unless-stopped
+    # environment:
+    #   DATABASE_URL: "postgres://DeliveryDB:DeliveryDB@2024@localhost:5432/DeliveryDB"
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
 
 #   frontend:
 #     container_name: frontend-app
