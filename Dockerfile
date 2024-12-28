@@ -11,8 +11,7 @@ COPY . .
 
 RUN rm -rf node_modules
 
-RUN npm i
-#RUN yarn
+RUN yarn
 
 # RUN npx prisma db pull
 
@@ -20,10 +19,10 @@ RUN npx prisma migrate deploy
 
 RUN npx prisma generate
 
-#RUN apk add --no-cache bash
+RUN apk add --no-cache bash
+RUN apk add --no-cache openssl
 
-RUN npm run build
-#RUN yarn build
+RUN yarn build
 
 CMD ["yarn", "start:prod"]
 
