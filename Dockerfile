@@ -19,8 +19,6 @@ RUN npx prisma migrate deploy
 
 RUN npx prisma generate
 
-# RUN npx prisma migrate dev
-
 #RUN apk add --no-cache bash
 
 RUN yarn build
