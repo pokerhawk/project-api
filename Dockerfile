@@ -15,9 +15,9 @@ RUN yarn
 
 # RUN npx prisma db pull
 
-RUN npx prisma generate
-
 RUN npx prisma migrate deploy
+
+RUN npx prisma generate
 
 # RUN npx prisma migrate dev
 
