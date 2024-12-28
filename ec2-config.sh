@@ -42,3 +42,9 @@ ssh -T git@github.com
 ##Go to the repo you wanna clone click on code, go to ssh tab and git clone using that link
 
 ##======================================##
+#Dependencies
+
+sudo apt-get install yarn npm
+sudo apt-get install libssl-dev
+
+##======================================##
