@@ -13,15 +13,15 @@ RUN rm -rf node_modules
 
 RUN yarn
 
+RUN apk add --no-cache bash
+RUN apk add --no-cache libssl1.1
+RUN apk add --no-cache openssl
+
 # RUN npx prisma db pull
 
 RUN npx prisma migrate deploy
 
 RUN npx prisma generate
-
-RUN apk add --no-cache bash
-RUN apk add --no-cache libssl1.1
-RUN apk add --no-cache openssl
 
 RUN yarn build
 
