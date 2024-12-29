@@ -1,5 +1,5 @@
 services:
-  postgres:
+  delivery-Database:
     image: postgres:latest
     container_name: Delivery-DB
     restart: always
@@ -14,3 +14,6 @@ services:
 
 volumes:
   postgres:
+
+networks:
+  api-network:
