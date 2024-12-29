@@ -11,6 +11,9 @@ services:
     #   - postgres
     env_file:
       - ./.env
+    networks:
+      - api-network
 
 networks:
   api-network:
+    external: true

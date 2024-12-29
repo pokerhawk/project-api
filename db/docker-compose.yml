@@ -11,9 +11,12 @@ services:
       - postgres:/var/lib/postgres/data
     ports:
       - "5432:5432"
+    networks:
+      - api-network
 
 volumes:
   postgres:
 
 networks:
   api-network:
+    external: true
