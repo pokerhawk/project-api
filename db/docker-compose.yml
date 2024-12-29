@@ -1,7 +1,7 @@
 services:
-  delivery-Database:
+  delivery-DB:
     image: postgres:latest
-    container_name: Delivery-DB
+    container_name: delivery-DB
     restart: always
     environment:
       POSTGRES_USER: DeliveryDB
@@ -19,4 +19,3 @@ volumes:
 
 networks:
   api-network:
-    external: true
