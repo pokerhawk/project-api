@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: Delivery-DB
+    restart: always
+    environment:
+      POSTGRES_USER: DeliveryDB
+      POSTGRES_PASSWORD: DeliveryDB@2024
+      POSTGRES_DB: DeliveryDB
+    volumes:
+      - postgres:/var/lib/postgres/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres:

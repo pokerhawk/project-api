@@ -1,17 +1,4 @@
 services:
-  postgres:
-    image: postgres:latest
-    container_name: Delivery-DB
-    restart: always
-    environment:
-      POSTGRES_USER: DeliveryDB
-      POSTGRES_PASSWORD: DeliveryDB@2024
-      POSTGRES_DB: DeliveryDB
-    volumes:
-      - postgres:/var/lib/postgres/data
-    ports:
-      - "5432:5432"
-
   api:
     container_name: backend-app
     build: ./ #build this directory where Dockerfile is
@@ -25,34 +12,4 @@ services:
     env_file:
       - ./.env
 
-#   frontend:
-#     container_name: frontend-app
-#     build: ./frontend
-#     restart: unless-stopped
-#     # environment:
-#     #   VITE_BASE_URL: "http://localhost:8080"
-#     ports:
-#       - 3000:3000
-#     depends_on:
-#       - api
-#     # env_file:
-#     #   - ./frontend/.env
-#     volumes:
-#       - frontend:/var/www/html
-
-#   nginx:
-#     container_name: nginx-server
-#     build: ./nginx
-#     ports:
-#       - 80:80
-#       # - 443:443
-#     volumes:
-#       - frontend:/var/www/html
-#     depends_on:
-#       - postgres
-#       - api
-#       - frontend
-
 volumes:
-  postgres:
-  # frontend:
