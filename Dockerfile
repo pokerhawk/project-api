@@ -19,7 +19,7 @@ RUN apk add --no-cache openssl
 
 # RUN npx prisma db pull
 
-RUN npx prisma migrate deploy
+# RUN npx prisma migrate deploy
 
 RUN npx prisma generate
 

@@ -7,8 +7,8 @@ services:
     #   DATABASE_URL: "postgres://DeliveryDB:DeliveryDB@2024@localhost:5432/DeliveryDB"
     ports:
       - 8080:8080
-    depends_on:
-      - delivery-DB
+    # depends_on:
+    #   - delivery-DB
     env_file:
       - ./.env
     networks:

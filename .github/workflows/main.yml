@@ -16,7 +16,7 @@ jobs:
         ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         
     - name: connect, pull and deploy
-      run: ssh admin@${{ secrets.SSH_HOST }} "cd delivery-backend && git checkout main && git pull && docker compose -f db/docker-compose.yml up -d && docker compose up -d"
+      run: ssh admin@${{ secrets.SSH_HOST }} "cd delivery-backend && git checkout main && git pull && chmod +x deploy.sh && ./deploy.sh"
 
     - name: cleanup
       run: rm -rf ~/.ssh
