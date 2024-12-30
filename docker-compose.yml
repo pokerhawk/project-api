@@ -1,4 +1,19 @@
 services:
+  delivery-DB:
+    image: postgres:latest
+    container_name: delivery-DB
+    restart: always
+    environment:
+      POSTGRES_USER: DeliveryDB
+      POSTGRES_PASSWORD: DeliveryDB@2024
+      POSTGRES_DB: DeliveryDB
+    volumes:
+      - postgres:/var/lib/postgres/data
+    ports:
+      - "5432:5432"
+    networks:
+      - api-network
+
   api:
     container_name: backend-app
     build: ./ #build this directory where Dockerfile is
@@ -7,13 +22,16 @@ services:
     #   DATABASE_URL: "postgres://DeliveryDB:DeliveryDB@2024@localhost:5432/DeliveryDB"
     ports:
       - 8080:8080
-    # depends_on:
-    #   - postgres
+    depends_on:
+      - delivery-DB
     env_file:
       - ./.env
     networks:
-      - db_api-network
+      - api-network
+
+volumes:
+  postgres:
 
 networks:
-  db_api-network:
-    external: true
+  api-network:
+    driver: bridge

@@ -3,3 +3,6 @@ echo -e "\nENV DATABASE_URL="postgres://DeliveryDB:DeliveryDB@2024@$(hostname -I
 docker compose -f ./db/docker-compose.yml up -d
 # docker compose -f ./docker-compose.yml down
 docker compose -f ./docker-compose.yml up -d
+
+#docker exec -it <container_name> /bin/bash
+#docker logs <container_name>
