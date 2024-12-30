@@ -16,11 +16,7 @@ jobs:
         ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         
     - name: connect and pull
-      run: ssh admin@${{ secrets.SSH_HOST }} "cd delivery-backend && git checkout main && git pull"
-    
-    - name: test
-      run: |
-        hostname
+      run: ssh admin@${{ secrets.SSH_HOST }} "cd delivery-backend && git checkout main && git pull && whoami"
 
     - name: cleanup
       run: rm -rf ~/.ssh
