@@ -8,15 +8,15 @@ services:
     ports:
       - 8080:8080
     # depends_on:
-    #   - delivery-DB
+    #   - postgres
     env_file:
       - ./.env
     networks:
-      - api-network
+      - db_api-network
 
 volumes:
   postgres:
 
 networks:
-  api-network:
-    driver: bridge
+  db_api-network:
+    external: true
