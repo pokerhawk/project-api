@@ -15,5 +15,5 @@ services:
       - api-network
 
 networks:
-  api-network:
+  db_api-network:
     external: true
