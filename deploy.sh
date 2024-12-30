@@ -3,6 +3,7 @@
 docker stop backend-app
 docker rm backend-app
 docker rmi delivery-backend-api
+
 # docker compose -f ./db/docker-compose.yml up -d
 docker compose -f ./docker-compose.yml up -d
 
