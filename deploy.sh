@@ -8,3 +8,4 @@ docker compose -f ./docker-compose.yml up -d
 
 #docker exec -it <container_name> /bin/bash
 #docker logs <container_name>
+#docker network inspect <network_name>
