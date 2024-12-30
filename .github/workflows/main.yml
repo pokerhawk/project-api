@@ -9,14 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install ssh keys
-      run: |
-        install -m 600 -D /dev/null ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+    # - name: Install ssh keys
+    #   run: |
+    #     install -m 600 -D /dev/null ~/.ssh/id_rsa
+    #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+    #     ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         
     - name: connect and pull
-      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout main && git pull
+      run: ssh -i "${{ secrets.SSH_KEY }}" admin@${{ secrets.SSH_HOST }} "cd delivery-backend && git checkout main && git pull"
     
-    - name: cleanup
-      run: rm -rf ~/.ssh
+    # - name: cleanup
+    #   run: rm -rf ~/.ssh
+
+    - name: test
+      run: echo "Hello world" >> test.txt
