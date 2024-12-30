@@ -12,9 +12,8 @@ services:
     env_file:
       - ./.env
     networks:
-      - api-network
+      - db_api-network
 
 networks:
-  backend-app:
-    name: api-network
+  db_api-network:
     external: true
