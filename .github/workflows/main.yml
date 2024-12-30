@@ -19,7 +19,8 @@ jobs:
       run: ssh admin@${{ secrets.SSH_HOST }} "cd delivery-backend && git checkout main && git pull"
     
     - name: test
-      run: echo "Hello world" >> test.txt
+      run: |
+        hostname
 
     - name: cleanup
       run: rm -rf ~/.ssh
