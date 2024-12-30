@@ -15,8 +15,14 @@ jobs:
         echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         
-    - name: connect and pull
-      run: ssh admin@${{ secrets.SSH_HOST }} "cd delivery-backend && git checkout main && git pull && whoami"
+    - name: connect, pull and deploy
+      run: |
+      ssh admin@${{ secrets.SSH_HOST }} "
+      cd delivery-backend && 
+      git checkout main && 
+      git pull && 
+      docker compose -f db/docker-compose.yml up -d && 
+      docker compose up -d"
 
     - name: cleanup
       run: rm -rf ~/.ssh
