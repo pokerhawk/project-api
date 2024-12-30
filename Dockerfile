@@ -1,5 +1,6 @@
 FROM node:lts-alpine
 
+#ENV DATABASE_URL="postgres://DeliveryDB:DeliveryDB@2024@delivery-DB:5432/DeliveryDB"
 ENV API_KEY="95c86f32-7cde-4200-a508-f5c23ba6ac9f"
 ENV JWT_SECRET="asKZ89sdf02432"
 ENV REFRESH_SECRET="2m34l5kj2345dRi"

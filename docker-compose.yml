@@ -15,5 +15,6 @@ services:
       - api-network
 
 networks:
-  api-network:
+  backend-app:
+    name: api-network
     external: true
