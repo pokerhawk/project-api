@@ -11,6 +11,8 @@ services:
     #   - postgres
     env_file:
       - ./.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - db_api-network
 
