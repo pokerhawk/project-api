@@ -1,7 +1,13 @@
 .env
 /prisma/generated
-/prisma/migrations
 /dist
 /node_modules
 yarn.lock
+/db
+/nginx
+README.md
+
+# SH
 deploy.sh
+ec2-config.sh
+entrypoint.sh

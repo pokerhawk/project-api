@@ -9,15 +9,11 @@ WORKDIR /api
 
 COPY . .
 
-RUN rm -rf node_modules
-
 RUN yarn
 
 RUN apk add --no-cache bash
 RUN apk add --no-cache libressl
 RUN apk add --no-cache openssl
-
-# RUN npx prisma db pull
 
 RUN yarn build
 
