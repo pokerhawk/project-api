@@ -19,11 +19,10 @@ RUN apk add --no-cache openssl
 
 # RUN npx prisma db pull
 
-RUN npx prisma migrate deploy
-
-RUN npx prisma generate
-
 RUN yarn build
+
+RUN npx prisma migrate deploy
+RUN npx prisma generate
 
 CMD ["yarn", "start:prod"]
 # CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma generate && yarn start:prod"]
