@@ -17,15 +17,15 @@ jobs:
         
     - name: connect, pull and deploy
       run: | 
-      ssh admin@${{ secrets.SSH_HOST }}  << 'EOF'
-      cd delivery-backend
-      git checkout main
-      git restore deploy.sh entrypoint.sh
-      git pull
-      chmod +x deploy.sh
-      chmod +x entrypoint.sh
-      ./deploy.sh
-      EOF
+        ssh admin@${{ secrets.SSH_HOST }}  << 'EOF'
+        cd delivery-backend
+        git checkout main
+        git restore deploy.sh entrypoint.sh
+        git pull
+        chmod +x deploy.sh
+        chmod +x entrypoint.sh
+        ./deploy.sh
+        EOF
 
     - name: cleanup
       run: rm -rf ~/.ssh
