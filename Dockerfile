@@ -21,7 +21,7 @@ RUN apk add --no-cache openssl
 
 RUN yarn build
 
-RUN chmod +x /entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
 # RUN npx prisma migrate deploy
 # RUN npx prisma generate
