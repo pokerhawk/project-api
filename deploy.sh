@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # echo -e "\nENV DATABASE_URL="postgres://DeliveryDB:DeliveryDB@2024@$(hostname -I | awk '{print $2}'):5432/DeliveryDB"" >> ./Dockerfile
 
 docker stop backend-app
