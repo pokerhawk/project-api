@@ -1,13 +1,14 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { AuthService, ILoginBody, Iverify2Fa } from './auth.service';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { AuthService, loginProps } from './auth.service';
 import { CreateUserDto } from './dto/register.dto';
-// import { ApiKeyAuthGuard } from './guards/apikey-auth.guard';
+import { WeatherService } from 'src/services/weather-api/weather.service';
+import { ApiKeyAuthGuard } from './guards/apikey-auth.guard';
 
-// @UseGuards(ApiKeyAuthGuard)
 @Controller('auth')
 export class AuthController {
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly weatherService: WeatherService
     ){}
 
     @Post('register')
@@ -15,18 +16,25 @@ export class AuthController {
         return this.authService.register(userPayload);
     }
 
+    @Get('isAuthenticated')
+    isAuthenticated(@Param() email: string){
+        return this.authService.isAuthenticated(email);
+    }
+
     @Post('login')
-    login(@Body() body: ILoginBody){
+    login(@Body() body: loginProps){
         return this.authService.login(body);
     }
 
-    @Get('generateQrCode')
+    @UseGuards(ApiKeyAuthGuard)
+    @Get('manualGenerateQrCode')
     generate2FA(@Param() userId: string){
-        return this.authService.generate2FA(userId);
+        return this.authService.manualGenerate2FA(userId);
     }
 
-    @Post('verify2Fa')
-    verify2FA(@Body() body: Iverify2Fa){
-        return this.authService.verify2FA(body);
+    @UseGuards(ApiKeyAuthGuard)
+    @Post('manualVerify2Fa')
+    verify2FA(@Body() body: loginProps){
+        return this.authService.manualVerify2FA(body);
     }
 }

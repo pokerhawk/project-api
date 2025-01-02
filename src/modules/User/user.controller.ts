@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { dateProps } from 'src/utils/date/adjust-date';
@@ -17,14 +17,14 @@ export class UserController {
         return this.userService.getUserById(userId);
     }
 
-    // @Get('getAll')
-    // getUsers(
-    //     @Query('rows', ParseIntPipe) rows: number,
-    //     @Query('page', ParseIntPipe) page: number,
-    //     @Query('businessId') businessId: string
-    // ){
-    //     return this.userService.getUsers(rows, page, businessId);
-    // }
+    @Get('getAll')
+    getUsers(
+        @Query('rows', ParseIntPipe) rows: number,
+        @Query('page', ParseIntPipe) page: number,
+        @Query('businessId') businessId: string
+    ){
+        return this.userService.getUsers(rows, page, businessId);
+    }
 
     // @Get('sellersList')
     // sellersList(
@@ -41,4 +41,12 @@ export class UserController {
     //     @Query('commission') commission: number){
     //     return this.userService.updateUserCommission(id, commission);
     // }
+
+    @Delete('')
+    delete(
+        // @Request() req,
+        @Param() userId: string
+    ){
+        return this.userService.delete(userId);
+    }
 }

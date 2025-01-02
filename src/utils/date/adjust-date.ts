@@ -73,3 +73,15 @@ export const fixedDate = (date:dateProps, type:typeProps) =>{
         }
     }
 }
+
+export const localtimeEpoch = () => {
+    return Math.floor(new Date().getTime() / 1000);
+}
+
+export const localtimeString = () => {
+    const monthPad = String(month + 1).padStart(2, '0');
+    const dayPad = String(today).padStart(2, '0');
+    const hoursPad = String(hours).padStart(2, '0');
+    const minutesPad = String(minutes).padStart(2, '0');
+    return `${year}-${monthPad}-${dayPad} ${hoursPad}:${minutesPad}`;
+}

@@ -69,6 +69,15 @@ model Product { //Não esta em uso nem ligada
     deletedAt   DateTime?
 }
 
+model APIs {
+    id          String      @id @default(uuid())
+    apiName     String      @unique()
+    infoJson    Json
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    deletedAt   DateTime?
+}
+
 enum SaleStatus {
     pending
     confirmed

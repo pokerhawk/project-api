@@ -1,7 +1,9 @@
 on:
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
+    tags:
+      - '*'
 
 jobs:
   run_pull:
@@ -22,6 +24,12 @@ jobs:
         git checkout main
         git restore deploy.sh entrypoint.sh
         git pull
+        rm .env
+        echo "${{ DATABASE_URL }}" >> .env
+        echo "${{ JWT_SECRET }}" >> .env
+        echo "${{ REFRESH_SECRET }}" >> .env
+        echo "${{ API_KEY }}" >> .env
+        echo "${{ WEATHER_API_KEY }}" >> .env
         chmod +x deploy.sh
         chmod +x entrypoint.sh
         ./deploy.sh

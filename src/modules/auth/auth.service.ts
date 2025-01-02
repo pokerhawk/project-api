@@ -5,19 +5,14 @@ import { CreateUserDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { userToReturnMapper } from 'src/utils/mappers/user-to-return.mapper';
 import { TwoFactorAuthService } from './two-factor-auth.service';
-import { User } from 'prisma/generated/client';
 
-export interface ILoginBody {
-    email: string;
-    password: string;
-}
-
-export interface Iverify2Fa {
+export type loginProps = {
     userId: string;
+    password: string;
     code: string;
 }
 
-type UserJwtProps = {
+type userJwtProps = {
     sub: string;
     email: string;
     name?: string;
@@ -43,6 +38,23 @@ export class AuthService {
         }
     }
 
+    async manualGenerate2FA(userId: string){
+        const user = await this.prisma.user.findFirst({where:{id: userId}});
+        if(user.mfaEnabled)
+            return;
+
+        const qrcode = await this.twoFactorService.generateTwoFactorAuthSecret(user.email);
+
+        return {qrcode};
+    }
+
+    async manualVerify2FA(body: loginProps){
+        const user = await this.prisma.user.findFirst({where:{id: body.userId}})
+        const isCodeValid = await this.twoFactorService.verifyTwoFaCode(body.code, user);
+
+        return isCodeValid;
+    }
+
     async register(userPayload: CreateUserDto){
         const user = {
             ...userPayload,
@@ -66,41 +78,40 @@ export class AuthService {
         return 'Cadastrado com sucesso!'
     }
 
-    async login(body: ILoginBody){
-        const user = await this.prisma.user.findFirst({where:{email: body.email}});
-        const validateUser = await this.validateUser(body.email, body.password);
-        const userJwt: UserJwtProps = {
+    async isAuthenticated(email: string){
+        const user = await this.prisma.user.findFirst({where:{email}});
+        
+        if(user.mfaEnabled){
+            return user.mfaEnabled;
+        } else {
+            const qrcode = await this.twoFactorService.generateTwoFactorAuthSecret(user.email);
+            return {
+                qrcode
+            };
+        }
+    }
+
+    async login(body: loginProps){
+        const user = await this.prisma.user.findFirst({where:{id: body.userId}})
+        const verifyCode = await this.twoFactorService.verifyTwoFaCode(body.code, user)
+        const validateUser = await this.validateUser(user.email, body.password);
+        const userJwt: userJwtProps = {
             sub: validateUser.id,
             email: validateUser.email,
             name: validateUser.name,
         };
 
-        return {
-            userId: user.id,
-            type: user.accountAccess,
-            access_token: this.jwtService.sign(userJwt),
-            refresh_token: this.jwtService.sign(userJwt, { expiresIn: '60d' }),
-            mfaEnabled: user.mfaEnabled
+        if(verifyCode && user.mfaEnabled){
+            return {
+                message: `Bem vindo ${user.name}`,
+                userId: user.id,
+                type: user.accountAccess,
+                access_token: this.jwtService.sign(userJwt),
+                refresh_token: this.jwtService.sign(userJwt, { expiresIn: '60d' }),
+            }
         }
-    }
-
-    async generate2FA(userId: string){
-        const user = await this.prisma.user.findFirst({where:{id: userId}});
-        if(user.mfaEnabled)
-            return;
-
-        const qrcode = await this.twoFactorService.generateTwoFactorAuthSecret(user.email);
-
-        return {qrcode};
-    }
-
-    async verify2FA(body: Iverify2Fa){
-        const user = await this.prisma.user.findFirst({where:{id: body.userId}})
-        const verifyCode = await this.twoFactorService.verifyTwoFaCode(body.code, user)
-
         return {
-            isValid: verifyCode,
-            message: `Bem vindo ${user.name}`
+            Error: "Codigo incorreto!"
         }
     }
 }

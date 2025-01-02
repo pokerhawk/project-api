@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AllModule } from './modules/all.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { SalesModule } from './modules/Sales/sales.module';
+import { UserModule } from './modules/User/user.module';
+import { ExternalApiModule } from './modules/Weather/external-api.module';
 
 @Module({
-  imports: [AllModule, AuthModule, ConfigModule.forRoot()],
+  imports: [SalesModule, UserModule, AuthModule, ExternalApiModule, ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })
