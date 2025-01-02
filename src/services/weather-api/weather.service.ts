@@ -22,18 +22,18 @@ export class WeatherService implements OnModuleInit {
         const apiInfo: any = await this.prisma.aPIs.findFirst({
             where: {apiName: "WeatherAPI"}
         })
-        this.callsLeft = apiInfo.infoJson.callsLeftMonth;
         if(!apiInfo){
-            this.callsLeft = 5000000
+            this.callsLeft = 4000000
             return await this.prisma.aPIs.create({
                 data: {
                     apiName: "WeatherAPI",
                     infoJson: {
-                        callsLeftMonth: 5000000,
+                        callsLeftMonth: 4000000,
                     }
                 }
             })
         }
+        this.callsLeft = apiInfo.infoJson.callsLeftMonth;
     }
 
     async currentWeatherByCity(city: string){        

@@ -25,8 +25,8 @@ jobs:
         git restore deploy.sh entrypoint.sh
         git pull
         rm .env
-        echo "*** Adding secrets ***"
-        echo 'DATABASE_URL=${{ secrets.DATABASE_URL }}' >> .env
+        echo "***  8432Adding secrets ***"
+        echo 'DATABASE_URL="${{ secrets.DATABASE_URL }}"' >> .env
         echo 'JWT_SECRET=${{ secrets.JWT_SECRET }}' >> .env
         echo 'REFRESH_SECRET="${{ secrets.REFRESH_SECRET }}"' >> .env
         echo 'API_KEY="${{ secrets.API_KEY }}"' >> .env
