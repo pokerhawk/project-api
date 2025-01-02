@@ -25,11 +25,13 @@ jobs:
         git restore deploy.sh entrypoint.sh
         git pull
         rm .env
+        echo "Adding secrets"
         echo "${{ secrets.DATABASE_URL }}" >> .env
         echo "${{ secrets.JWT_SECRET }}" >> .env
         echo "${{ secrets.REFRESH_SECRET }}" >> .env
         echo "${{ secrets.API_KEY }}" >> .env
         echo "${{ secrets.WEATHER_API_KEY }}" >> .env
+        cat .env
         chmod +x deploy.sh
         chmod +x entrypoint.sh
         ./deploy.sh
