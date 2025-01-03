@@ -20,6 +20,12 @@ jobs:
     - name: connect, pull and deploy
       run: | 
         ssh admin@${{ secrets.SSH_HOST }}  << 'EOF'
+        echo "#!/bin/sh" >> clone.sh
+        echo "if ! ls -a | grep -q "project-api"; then" >> clone.sh
+        echo "git clone git@github.com:pokerhawk/project-api.git" >> clone.sh
+        echo "fi" >> clone.sh
+        chmod +x clone.sh
+        ./clone.sh
         cd project-api
         git checkout main
         git restore deploy.sh entrypoint.sh
@@ -37,4 +43,8 @@ jobs:
         EOF
 
     - name: cleanup
-      run: rm -rf ~/.ssh
+      run: |
+        ssh admin@${{ secrets.SSH_HOST }}  << 'EOF'
+        rm -rf project-api
+        EOF
+        rm -rf ~/.ssh

@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# echo -e "\nENV DATABASE_URL="postgres://DeliveryDB:DeliveryDB@2024@$(hostname -I | awk '{print $2}'):5432/DeliveryDB"" >> ./Dockerfile
-
-
 docker stop backend-app
 docker rm backend-app
 docker rmi project-api-backend-app
 
 echo y | docker system prune
 
-# docker compose -f ./db/docker-compose.yml up -d
+if ! docker ps -a | grep -q "project-database"; then
+    docker compose -f ./db/docker-compose.yml up -d
+fi
+
 docker compose -f ./docker-compose.yml up -d
 
 #docker exec -it <container_name> /bin/bash
