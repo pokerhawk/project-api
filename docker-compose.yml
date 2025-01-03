@@ -11,9 +11,17 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - db_api-network
-
-volumes:
-  postgres:
+      
+  nginx:
+    build: ./nginx/
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - db_api-network
+    depends_on:
+      - backend-app
 
 networks:
   db_api-network:

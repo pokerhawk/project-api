@@ -1,5 +1,8 @@
 FROM nginx:latest
 
-RUN rm /etc/nginx/conf.d/default.conf
+# Copy custom NGINX config
+# RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY nginx.conf /etc/nginx/conf.d
+# Copy SSL certificates
+COPY certs /etc/nginx/certs

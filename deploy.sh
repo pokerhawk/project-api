@@ -1,10 +1,14 @@
 #!/bin/sh
 
-docker stop backend-app
-docker rm backend-app
-docker rmi project-api-backend-app
+docker stop backend-app nginx-proxy
+docker rm backend-app nginx-proxy
+docker rmi project-api-backend-app project-api-nginx-proxy
 
 echo y | docker system prune
+
+chmod +x ./nginx/ssl.sh
+./nginx/ssl.sh
+chmod -x ./nginx/ssl.sh
 
 if ! docker ps -a | grep -q "project-database"; then
     docker compose -f ./db/docker-compose.yml up -d
