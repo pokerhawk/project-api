@@ -10,7 +10,7 @@ export class UserController {
         private readonly userService: UserService
     ){}
     
-    @Get('getUserById')
+    @Get('byId')
     getUserById(
         @Query('userId') userId: string
     ){
@@ -19,11 +19,10 @@ export class UserController {
 
     @Get('getAll')
     getUsers(
-        @Query('rows', ParseIntPipe) rows: number,
-        @Query('page', ParseIntPipe) page: number,
-        @Query('businessId') businessId: string
+        @Query('rows', ParseIntPipe) rows?: number,
+        @Query('page', ParseIntPipe) page?: number
     ){
-        return this.userService.getUsers(rows, page, businessId);
+        return this.userService.getUsers(rows, page);
     }
 
     // @Get('sellersList')

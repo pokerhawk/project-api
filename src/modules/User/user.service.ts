@@ -13,7 +13,9 @@ export class UserService {
         return {...user};
     }
 
-    async getUsers(rows: number, page: number, businessId: string){}
+    async getUsers(rows?: number, page?: number){
+        return await this.prisma.user.findMany({});
+    }
 
     async delete(userId: string){
         const user = await this.prisma.user.findFirst({where: {id: userId}});
