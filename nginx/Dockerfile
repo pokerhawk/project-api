@@ -1,6 +1,6 @@
 FROM nginx:latest
 
-COPY ../certs .
+COPY certs .
 # Copy custom NGINX config
 # RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
