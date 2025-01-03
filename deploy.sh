@@ -5,7 +5,7 @@
 
 docker stop backend-app
 docker rm backend-app
-docker rmi delivery-backend-api
+docker rmi project-api-backend-app
 
 echo y | docker system prune
 

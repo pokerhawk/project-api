@@ -1,12 +1,12 @@
 services:
-  delivery-DB:
+  project-database:
     image: postgres:latest
-    container_name: delivery-DB
+    container_name: project-database
     restart: always
     environment:
-      POSTGRES_USER: DeliveryDB
-      POSTGRES_PASSWORD: DeliveryDB@2024
-      POSTGRES_DB: DeliveryDB
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: Pr0j3(t
+      POSTGRES_DB: project
     volumes:
       - postgres:/var/lib/postgres/data
     ports:

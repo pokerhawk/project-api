@@ -20,7 +20,7 @@ jobs:
     - name: connect, pull and deploy
       run: | 
         ssh admin@${{ secrets.SSH_HOST }}  << 'EOF'
-        cd delivery-backend
+        cd project-api
         git checkout main
         git restore deploy.sh entrypoint.sh
         git pull

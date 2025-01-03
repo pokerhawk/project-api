@@ -22,7 +22,7 @@ export class TwoFactorAuthService {
     return;
 
     const secret = authenticator.generateSecret();
-    const otpAuth = authenticator.keyuri(user.email, "Projeto Delivery", secret);
+    const otpAuth = authenticator.keyuri(user.email, "Projeto API", secret);
 
     await this.prisma.user.update({
       where: {id: user.id},

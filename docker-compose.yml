@@ -1,14 +1,10 @@
 services:
-  api:
+  backend-app:
     container_name: backend-app
-    build: ./ #build this directory where Dockerfile is
+    build: ./
     restart: unless-stopped
-    # environment:
-    #   DATABASE_URL: "postgres://DeliveryDB:DeliveryDB@2024@localhost:5432/DeliveryDB"
     ports:
       - 8080:8080
-    # depends_on:
-    #   - postgres
     env_file:
       - ./.env
     extra_hosts:
