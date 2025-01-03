@@ -45,6 +45,8 @@ jobs:
     - name: cleanup
       run: |
         ssh admin@${{ secrets.SSH_HOST }}  << 'EOF'
-        rm -rf project-api
+        rm -rf project-api/
+        rm -rf clone.sh
+        rm -rf certs/
         EOF
         rm -rf ~/.ssh

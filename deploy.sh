@@ -6,9 +6,12 @@ docker rmi project-api-backend-app project-api-nginx-proxy
 
 echo y | docker system prune
 
-chmod +x ./nginx/ssl.sh
-./nginx/ssl.sh
-chmod -x ./nginx/ssl.sh
+mkdir certs
+
+## SSL cert ##
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout certs/nginx-selfsigned.key \
+    -out certs/nginx-selfsigned.crt
 
 if ! docker ps -a | grep -q "project-database"; then
     docker compose -f ./db/docker-compose.yml up -d
