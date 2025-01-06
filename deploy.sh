@@ -23,3 +23,7 @@ docker compose -f ./docker-compose.yml up -d
 #docker exec -it <container_name> /bin/bash
 #docker logs <container_name>
 #docker network inspect <network_name>
+
+# SSL certificate on the machine you're using curl from:
+# RUN cp /etc/ssl/certs/nginx-selfsigned.crt /usr/share/ca-certificates/
+# RUN update-ca-certificates
