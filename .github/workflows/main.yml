@@ -49,5 +49,6 @@ jobs:
         rm -rf project-api/
         rm -rf clone.sh
         rm -rf certs/
+        docker rmi project-api-nginx project-api-backend-app postgres certbot/certbot
         EOF
         rm -rf ~/.ssh

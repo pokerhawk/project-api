@@ -18,6 +18,7 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
     ports:
       - "80:80"
       - "443:443"
@@ -32,13 +33,20 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
     depends_on:
       - nginx
-    command: certonly --email eliabedosreis@gmail.com --agree-tos --no-eff-email --force-renewal -d ${DOMAIN_NAME}
+    command: certonly --webroot webroot-path=/var/www/html --email eliabedosreis@gmail.com --agree-tos --no-eff-email --force-renewal -d ec2-3-144-254-83.us-east-2.compute.amazonaws.com
 
 volumes:
   certbot-etc:
   certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/admin/node_project/views/
+      o: bind
 
 networks:
   db_api-network:

@@ -2,7 +2,6 @@
 
 docker stop backend-app nginx-proxy
 docker rm backend-app nginx-proxy
-docker rmi project-api-backend-app project-api-nginx
 
 echo y | docker system prune
 
