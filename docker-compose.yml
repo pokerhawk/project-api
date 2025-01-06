@@ -15,6 +15,9 @@ services:
   nginx:
     build: ./nginx/
     container_name: nginx-proxy
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     ports:
       - "80:80"
       - "443:443"
@@ -22,6 +25,16 @@ services:
       - db_api-network
     depends_on:
       - backend-app
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - nginx
+    command: certonly --email eliabedosreis@gmail.com --agree-tos --no-eff-email --force-renewal -d ${DOMAIN_NAME}
 
 networks:
   db_api-network:
