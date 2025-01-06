@@ -7,8 +7,8 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # Copy SSL certificates
 # COPY certs /etc/nginx/certs
-COPY certs /etc/ssl/certs
+COPY ./certs /etc/ssl/certs
 
+RUN ls /etc/ssl/certs
 RUN chmod 644 /etc/ssl/certs/nginx-selfsigned.crt
 RUN chmod 600 /etc/ssl/private/nginx-selfsigned.key
-RUN ls /etc/ssl/certs
