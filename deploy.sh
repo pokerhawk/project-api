@@ -11,7 +11,8 @@ mkdir ~/project-api/nginx/certs
 ## SSL cert ##
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout ~/project-api/nginx/certs/nginx-selfsigned.key \
-    -out ~/project-api/nginx/certs/nginx-selfsigned.crt
+    -out ~/project-api/nginx/certs/nginx-selfsigned.crt \
+    -subj "/C=BR/ST=Minas Gerais/L=Belo Horizonte/O=My Company/OU=IT Department/CN=localhost"
 
 if ! docker ps -a | grep -q "project-database"; then
     docker compose -f ./db/docker-compose.yml up -d
