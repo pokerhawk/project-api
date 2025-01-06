@@ -36,6 +36,10 @@ services:
       - nginx
     command: certonly --email eliabedosreis@gmail.com --agree-tos --no-eff-email --force-renewal -d ${DOMAIN_NAME}
 
+volumes:
+  certbot-etc:
+  certbot-var:
+
 networks:
   db_api-network:
     external: true
