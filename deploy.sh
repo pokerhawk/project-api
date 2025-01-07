@@ -2,6 +2,7 @@
 
 docker stop backend-app nginx-proxy
 docker rm backend-app nginx-proxy
+docker rmi project-api-nginx project-api-backend-app postgres certbot/certbot
 
 echo y | docker system prune
 
