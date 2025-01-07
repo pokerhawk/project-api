@@ -9,6 +9,7 @@ rm -rf ~/node_project
 echo y | docker system prune
 
 mkdir ~/project-api/nginx/certs
+mkdir ~/node_project
 mkdir ~/node_project/views
 
 ## SSL manual cert ##
