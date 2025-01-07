@@ -5,6 +5,6 @@ COPY certs .
 # RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy SSL certificates
+# Copy manual SSL certificates
 # COPY certs /etc/nginx/certs
-COPY ./certs /etc/ssl/certs
+# COPY ./certs /etc/ssl/certs

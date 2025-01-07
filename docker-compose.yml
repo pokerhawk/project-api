@@ -36,7 +36,7 @@ services:
       - web-root:/var/www/html
     depends_on:
       - nginx
-    command: certonly --webroot webroot-path=/var/www/html --email eliabedosreis@gmail.com --agree-tos --no-eff-email --force-renewal -d ec2-3-144-254-83.us-east-2.compute.amazonaws.com
+    command: certonly --webroot --webroot-path=/var/www/html --email eliabedosreis@gmail.com --agree-tos --no-eff-email --force-renewal -d ec2-3-144-254-83.us-east-2.compute.amazonaws.com
 
 volumes:
   certbot-etc:
