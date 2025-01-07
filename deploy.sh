@@ -3,6 +3,7 @@
 docker stop backend-app nginx-proxy
 docker rm backend-app nginx-proxy
 docker rmi project-api-nginx project-api-backend-app postgres certbot/certbot
+docker volume rm project-api_web-root project-api_certbot-etc project-api_certbot-var
 
 echo y | docker system prune
 
