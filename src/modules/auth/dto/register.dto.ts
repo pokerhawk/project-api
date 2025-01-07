@@ -15,4 +15,15 @@ export class CreateUserDto {
         message: 'Password is too weak'
     })
     password: string;
+
+    @IsString()
+    @MinLength(8, {message: "Must have 8 numbers"})
+    @MaxLength(8, {message: "Must have 8 numbers"})
+    zipcode: string;
+
+    @IsString()
+    number: string;
+
+    @IsString()
+    extra?: string;
 }

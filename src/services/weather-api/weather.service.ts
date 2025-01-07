@@ -38,7 +38,7 @@ export class WeatherService implements OnModuleInit {
 
     async currentWeatherByCity(city: string){        
         if(this.callsLeft != 0){
-            const update = await this.prisma.aPIs.update({
+            await this.prisma.aPIs.update({
                 where: {apiName: "WeatherAPI"},
                 data: {
                     infoJson: {
@@ -59,9 +59,22 @@ export class WeatherService implements OnModuleInit {
                     message: e.code
                 }
             })
-    
-            console.log(update)
-            return data;
+            
+            console.log(data)
+            // return data;
+            return {
+                callsLeft: this.callsLeft,
+                title: data.current.condition.text,
+                icon: data.current.condition.icon,
+                windSpeed: `${data.current.wind_kph}Km/h`,
+                coldWindTemp: `${data.current.windchill_c}Cº`,
+                humidity: `${data.current.humidity}%`,
+                cloud: `${data.current.cloud}%`,
+                temperature: `${data.current.temp_c}Cº`,
+                maxTemperature: `${data.current.heatindex_c}Cº`,
+                lowTemperature: `${data.current.dewpoint_c}Cº`,
+                feelsLikeTemp: `${data.current.feelslike_c}Cº`
+            }
         } else {
             return "No calls left, limit was hit"
         }

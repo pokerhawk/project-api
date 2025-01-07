@@ -6,9 +6,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SalesModule } from './modules/Sales/sales.module';
 import { UserModule } from './modules/User/user.module';
 import { ExternalApiModule } from './modules/Weather/external-api.module';
+import { TaskModule } from './modules/Task/task.module';
 
 @Module({
-  imports: [SalesModule, UserModule, AuthModule, ExternalApiModule, ConfigModule.forRoot()],
+  imports: [AuthModule, SalesModule, UserModule, TaskModule, ExternalApiModule, ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })

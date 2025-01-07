@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ClientService } from 'src/client/client.service';
 import { CreateSalesDto } from './dto/create-sales.dto';
-import { transformDate } from 'src/utils/date/adjust-date';
+import { transformToDate } from 'src/utils/date/adjust-date';
 import { UpdateSaleDto } from './dto/update-sale-status.dto';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class SalesService {
     ){}
 
     async create(salePayload: CreateSalesDto){
-        const saleDate = transformDate(salePayload.saleDate)
+        const saleDate = transformToDate(salePayload.saleDate)
         const sale = {
             ...salePayload,
             saleDate: saleDate,

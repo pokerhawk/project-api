@@ -10,6 +10,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { ApiKeyStrategy } from './strategies/apikey.strategy';
 import { ClientModule } from 'src/client/client.module';
 import { WeatherService } from 'src/services/weather-api/weather.service';
+import { CepService } from 'src/services/busca-CEP/busca.cep.service';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { WeatherService } from 'src/services/weather-api/weather.service';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, TwoFactorAuthService, JwtStrategy, LocalStrategy, ApiKeyStrategy, WeatherService],
+  providers: [AuthService, TwoFactorAuthService, JwtStrategy, LocalStrategy, ApiKeyStrategy, WeatherService, CepService],
   exports: [AuthService, TwoFactorAuthService]
 })
 export class AuthModule implements NestModule {

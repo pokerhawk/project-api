@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "commission" INTEGER NOT NULL DEFAULT 10,
+ADD COLUMN     "potLimit" INTEGER NOT NULL DEFAULT 20;

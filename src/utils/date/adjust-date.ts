@@ -17,7 +17,8 @@ const minutes = new Date().getMinutes()
 const seconds = new Date().getSeconds()
 const milliseconds = new Date().getMilliseconds()
 
-export const transformDate = (date:string, type?:typeProps) =>{
+//Date format yyyy-mm-dd
+export const transformToDate = (date:string, type?:typeProps) =>{
     const dateSplit = date.split('-');
     if(type){
         if(type === "gte"){

@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { userToReturnMapper } from 'src/utils/mappers/user-to-return.mapper';
 import { TwoFactorAuthService } from './two-factor-auth.service';
+import { CepService } from 'src/services/busca-CEP/busca.cep.service';
 
 export type loginProps = {
     userId: string;
@@ -23,7 +24,8 @@ export class AuthService {
     constructor(
         private readonly prisma: ClientService,
         private readonly jwtService: JwtService,
-        private readonly twoFactorService: TwoFactorAuthService
+        private readonly twoFactorService: TwoFactorAuthService,
+        private readonly cepService: CepService
     ){}
 
     validateApiKey(apiKey: string){
@@ -67,12 +69,23 @@ export class AuthService {
 
         if(emailExists)
         throw new BadRequestException("Este email já existe")
+
+        const address = await this.cepService.searchZipCode(user.zipcode)
         
         await this.prisma.user.create({
             data: {
                 name: user.name,
                 email: user.email,
                 password: user.password,
+                zipcode: user.zipcode,
+                ddd: address.ddd,
+                state: address.estado,
+                uf: address.uf,
+                city: address.localidade,
+                region: address.regiao,
+                street: address.logradouro,
+                number: user.number,
+                extra: user?.extra
             }
         })
         return 'Cadastrado com sucesso!'
