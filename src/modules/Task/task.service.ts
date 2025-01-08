@@ -3,6 +3,9 @@ import { ClientService } from 'src/client/client.service';
 import { transformToDate } from 'src/utils/date/adjust-date';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { PriorityEnum, StatusEnum } from 'prisma/generated/client';
+import { paginated } from 'src/utils/pagination/pagination';
+import { queryTaskOptions } from 'src/utils/query/query-task-options';
 
 @Injectable()
 export class TaskService {
@@ -36,5 +39,30 @@ export class TaskService {
                 dueDate: taskPayload.dueDate? transformToDate(taskPayload.dueDate, 'gte'): task.dueDate
             }
         })
+    }
+
+    async softDelete(taskId: string){
+        return await this.prisma.task.update({
+            where:{id: taskId},
+            data:{
+                deletedAt: new Date()
+            }
+        })
+    }
+
+    async delete(taskId: string){
+        return await this.prisma.task.delete({
+            where:{id: taskId}
+        })
+    }
+
+    async allTasks(userId: string, status?: StatusEnum, priority?: PriorityEnum, dueDate?: string, rows?: number, page?: number){
+        const { query, queryCount } = queryTaskOptions(userId, status, priority, dueDate, rows, page);
+        const [tasks, tasksCount] = await this.prisma.$transaction([
+            this.prisma.task.findMany(query),
+            this.prisma.task.count(queryCount)
+        ])
+
+        return paginated(tasks, tasksCount, page, rows);
     }
 }

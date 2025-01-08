@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { userToReturnMapper } from 'src/utils/mappers/user-to-return.mapper';
 import { TwoFactorAuthService } from './two-factor-auth.service';
 import { CepService } from 'src/services/busca-CEP/busca.cep.service';
+import { WeatherService } from 'src/services/weather-api/weather.service';
 
 export type loginProps = {
     userId: string;
@@ -25,7 +26,8 @@ export class AuthService {
         private readonly prisma: ClientService,
         private readonly jwtService: JwtService,
         private readonly twoFactorService: TwoFactorAuthService,
-        private readonly cepService: CepService
+        private readonly cepService: CepService,
+        private readonly weatherService: WeatherService
     ){}
 
     validateApiKey(apiKey: string){
@@ -38,23 +40,6 @@ export class AuthService {
         if (user && await bcrypt.compare(password, user.password)) {
             return userToReturnMapper(user);
         }
-    }
-
-    async manualGenerate2FA(userId: string){
-        const user = await this.prisma.user.findFirst({where:{id: userId}});
-        if(user.mfaEnabled)
-            return;
-
-        const qrcode = await this.twoFactorService.generateTwoFactorAuthSecret(user.email);
-
-        return {qrcode};
-    }
-
-    async manualVerify2FA(body: loginProps){
-        const user = await this.prisma.user.findFirst({where:{id: body.userId}})
-        const isCodeValid = await this.twoFactorService.verifyTwoFaCode(body.code, user);
-
-        return isCodeValid;
     }
 
     async register(userPayload: CreateUserDto){
@@ -106,8 +91,10 @@ export class AuthService {
 
     async login(body: loginProps){
         const user = await this.prisma.user.findFirst({where:{id: body.userId}})
+        const weather = await this.weatherService.currentWeatherByCity(user.city);
         const verifyCode = await this.twoFactorService.verifyTwoFaCode(body.code, user)
         const validateUser = await this.validateUser(user.email, body.password);
+        
         const userJwt: userJwtProps = {
             sub: validateUser.id,
             email: validateUser.email,
@@ -117,6 +104,7 @@ export class AuthService {
         if(verifyCode && user.mfaEnabled){
             return {
                 message: `Bem vindo ${user.name}`,
+                weather,
                 userId: user.id,
                 type: user.accountAccess,
                 access_token: this.jwtService.sign(userJwt),

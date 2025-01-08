@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ExternalApiService } from './external-api.service';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 
