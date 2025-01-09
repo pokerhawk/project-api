@@ -40,6 +40,20 @@ curl -X GET localhost:8080/user/byId?userId=string \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
+Get all user (requesting user must be of type support or admin):
+
+```
+curl -X GET localhost:8080/user/all?rows=number&page=number \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+Get all tasks (paginated all optional):
+
+```
+curl -X GET localhost:8080/task/all?status=pending&priority=medium&dueDate=2025-01-25&rows=2&page=1 \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
 **POST**
 
 Register:
@@ -60,10 +74,49 @@ Login (requires 2fa auth):
 curl -X POST localhost:8080/auth/login \
     -H "Content-Type: application/json"
     -d '{
-    "email": "eliabedosreis@gmail.com",
+    "email": "example@gmail.com",
     "password": "Abc@123",
     "code": "629760"
     }'
+```
+
+Create Task:
+
+```
+curl -X POST localhost:8080/task \
+  -H "Content-Type: application/json"
+  -d '{
+    "title": string,
+    "description": string,
+    "priority": "low|medium|high", Enum
+    "dueDate": "2025-01-25"
+    }'
+```
+
+**PATCH**
+
+Update Task:
+
+```
+curl -X POST localhost:8080/task \
+  -H "Content-Type: application/json"
+  -d '{
+    "taskId": string,
+    "title": string,
+    "description": string,
+    "priority": "low|medium|high", Enum
+    "status": "pending|atWork|completed", Enum
+    "dueDate": "2025-01-25"
+    }'
+```
+
+**DELETE**
+
+Delete Task (soft delete: deletedAt):
+
+```
+curl -X GET localhost:8080/task?taskId=string \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 ---

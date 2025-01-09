@@ -16,7 +16,6 @@ export class BackOfficeController {
         @Request() req: any,
         @Body() body: UpdateUserAccessDto
     ){
-        console.log(req.user)
         return this.backOfficeService.updateUserAccountAccess(req.user.id, body);
     }
 
