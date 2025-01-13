@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientService } from 'src/client/client.service';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 @Injectable()
 export class WeatherService implements OnModuleInit {
@@ -59,9 +59,7 @@ export class WeatherService implements OnModuleInit {
                     message: e.code
                 }
             })
-            
-            console.log(data)
-            // return data;
+
             return {
                 callsLeft: this.callsLeft,
                 title: data.current.condition.text,
@@ -78,13 +76,5 @@ export class WeatherService implements OnModuleInit {
         } else {
             return "No calls left, limit was hit"
         }
-    }
-
-    async getUserByIds(){
-        const { data } = await axios.post(`${this.baseURL}/user/email`, {
-                "login": "",
-                "password": "",
-            }, {headers: this.apiHeader}
-        )
     }
 }

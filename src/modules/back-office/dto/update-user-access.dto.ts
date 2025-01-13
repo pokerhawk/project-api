@@ -7,7 +7,6 @@ enum AccountAccessEnum {
 }
 
 export class UpdateUserAccessDto {
-    
     @IsString()
     userId: string;
     

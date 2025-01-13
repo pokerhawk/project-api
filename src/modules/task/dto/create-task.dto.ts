@@ -7,7 +7,6 @@ enum PriorityEnum {
 }
 
 export class CreateTaskDto {
-    
     @IsString()
     title: string;
 

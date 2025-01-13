@@ -20,10 +20,10 @@ model User {
     state                   String
     uf                      String
     city                    String
-    region                  String?
-    street                  String
+    address                 String
+    neighborhood            String?
     number                  String
-    extra                   String?
+    complement              String?
     commission              Int             @default(10)
     potLimit                Int             @default(20)
     mfaEnabled              Boolean         @default(false)

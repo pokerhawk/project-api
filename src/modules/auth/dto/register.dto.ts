@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsEmail, IsEnum, IsString, IsUUID, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
     
@@ -25,5 +25,5 @@ export class CreateUserDto {
     number: string;
 
     @IsString()
-    extra?: string;
+    complement?: string;
 }

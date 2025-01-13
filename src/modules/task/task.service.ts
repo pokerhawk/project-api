@@ -13,7 +13,7 @@ export class TaskService {
         private readonly prisma: ClientService,
     ){}
 
-    async create(userId, taskPayload: CreateTaskDto){
+    async create(userId: string, taskPayload: CreateTaskDto){
         return await this.prisma.task.create({
             data:{
                 title: taskPayload.title,
@@ -26,7 +26,6 @@ export class TaskService {
     }
 
     async update(taskPayload: UpdateTaskDto){
-
         const task = await this.prisma.task.findUnique({where:{id: taskPayload.taskId}})
 
         return await this.prisma.task.update({

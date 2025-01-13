@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards, Patch, Delete } from '@nestjs/common';
+import { Body, Controller, Get, ParseIntPipe, Post, Query, UseGuards, Patch, Request } from '@nestjs/common';
 import { SalesService } from './sales.service';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CreateSalesDto } from './dto/create-sales.dto';
@@ -12,17 +12,20 @@ export class SalesController {
     ){}
 
     @Post()
-    create(@Body() salePayload: CreateSalesDto){
-        return this.salesService.create(salePayload);
+    create(
+        @Request() req: any,
+        @Body() salePayload: CreateSalesDto
+    ){
+        return this.salesService.create(req.user.id, salePayload);
     }
 
     @Get()
     userSales(
+        @Request() req: any,
         @Query('rows', ParseIntPipe) rows: number,
         @Query('page', ParseIntPipe) page: number,
-        @Query('id') id: string
     ){
-        return this.salesService.userSales(rows, page, id);
+        return this.salesService.userSales(rows, page, req.user.id);
     }
 
     @Patch()

@@ -10,7 +10,7 @@ export class SalesService {
         private readonly prisma: ClientService,
     ){}
 
-    async create(salePayload: CreateSalesDto){
+    async create(userId:string, salePayload: CreateSalesDto){
         const saleDate = transformToDate(salePayload.saleDate)
         const sale = {
             ...salePayload,
@@ -18,12 +18,12 @@ export class SalesService {
             transactionValue: Number(salePayload.transactionValue * 100)
         };
         const seller = await this.prisma.user.findUnique({
-            where:{id: sale.userId},
+            where:{id: userId},
         });
 
         await this.prisma.sale.create({
             data: {
-                userId: sale.userId,
+                userId: userId,
                 saleDate: sale.saleDate,
                 transactionValue: sale.transactionValue,
                 commissionValue: (seller.commission * sale.transactionValue)/100,

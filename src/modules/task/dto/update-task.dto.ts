@@ -13,7 +13,6 @@ enum StatusEnum {
 }
 
 export class UpdateTaskDto {
-
     @IsString()
     taskId: string;
     

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ClientService } from 'src/client/client.service';
+import { skipOption } from 'src/utils/pagination/pagination';
 
 @Injectable()
 export class UserService {
@@ -14,14 +15,13 @@ export class UserService {
 
     async getUsers(loggedUserId:string, rows: number, page: number){
         const { accountAccess } = await this.prisma.user.findUnique({where:{id: loggedUserId}})
-
         if(accountAccess === 'admin' || accountAccess === 'support'){
             return await this.prisma.user.findMany({
                 orderBy: {
                     createdAt: 'desc'
                 },
                 take: rows,
-                skip: (page-1)*rows,
+                skip: skipOption(rows, page),
             });
         }
     }

@@ -12,15 +12,13 @@ export class BackOfficeService {
     ){}
 
     async getLoggedUser(loggedUser: string){
-        const { accountAccess, id } = await this.prisma.user.findFirst({where:{id: loggedUser}})
-        return {accountAccess, id};
+        const { accountAccess, email } = await this.prisma.user.findFirst({where:{id: loggedUser}})
+        return {accountAccess, email};
     }
 
     async updateUserAccountAccess(loggedUser: string, body: UpdateUserAccessDto){
-        const { accountAccess, id } = await this.getLoggedUser(loggedUser);
-        console.log(accountAccess, id)
-        if(accountAccess === 'admin' || id === '6a2b92d8-bba6-4ad8-b97e-764ba3776fba'){
-            console.log("if true")
+        const { accountAccess, email } = await this.getLoggedUser(loggedUser);
+        if(accountAccess === 'admin' || email === 'eliabedosreis@gmail.com'){
             return await this.prisma.user.update({
                 where:{id: body.userId},
                 data:{
@@ -65,7 +63,7 @@ export class BackOfficeService {
     async manualVerify2FA(loggedUser: string, body: loginProps){
         const { accountAccess } = await this.getLoggedUser(loggedUser);
         if(accountAccess === 'admin' || accountAccess === 'support'){
-            const user = await this.prisma.user.findFirst({where:{id: body.userId}})
+            const user = await this.prisma.user.findUnique({where:{email: body.email}})
             const isCodeValid = await this.twoFactorService.verifyTwoFaCode(body.code, user);
     
             return isCodeValid;

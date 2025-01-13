@@ -14,10 +14,6 @@ type ClientAddressProps = {
 }
 
 export class CreateSalesDto {
-    
-    @IsString()
-    userId: string;
-
     @IsString()
     saleDate: string;
     

@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsNumber, IsString } from "class-validator";
+import { IsEnum, IsString } from "class-validator";
 
 export enum SaleStatus {
     confirmed = 'confirmed',
@@ -7,7 +7,6 @@ export enum SaleStatus {
 }
 
 export class UpdateSaleDto {
-    
     @IsString()
     saleId: string;
 

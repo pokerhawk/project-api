@@ -9,7 +9,7 @@ import { CepService } from 'src/services/busca-CEP/busca.cep.service';
 import { WeatherService } from 'src/services/weather-api/weather.service';
 
 export type loginProps = {
-    userId: string;
+    email: string;
     password: string;
     code: string;
 }
@@ -67,10 +67,10 @@ export class AuthService {
                 state: address.estado,
                 uf: address.uf,
                 city: address.localidade,
-                region: address.regiao,
-                street: address.logradouro,
+                neighborhood: address.regiao,
+                address: address.logradouro,
                 number: user.number,
-                extra: user?.extra
+                complement: user?.complement
             }
         })
         return 'Cadastrado com sucesso!'
@@ -90,7 +90,7 @@ export class AuthService {
     }
 
     async login(body: loginProps){
-        const user = await this.prisma.user.findFirst({where:{id: body.userId}})
+        const user = await this.prisma.user.findUnique({where:{email: body.email}})
         const weather = await this.weatherService.currentWeatherByCity(user.city);
         const verifyCode = await this.twoFactorService.verifyTwoFaCode(body.code, user)
         const validateUser = await this.validateUser(user.email, body.password);

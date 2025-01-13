@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Task" ALTER COLUMN "dueDate" SET DATA TYPE DATE;

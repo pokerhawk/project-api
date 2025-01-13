@@ -4,13 +4,23 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { BackOfficeModule } from './modules/back-office/back.office.module';
-import { UserModule } from './modules/User/user.module';
-import { SalesModule } from './modules/Sales/sales.module';
-import { TaskModule } from './modules/Task/task.module';
-import { ExternalApiModule } from './modules/Weather/external-api.module';
+import { UserModule } from './modules/user/user.module';
+import { SalesModule } from './modules/sales/sales.module';
+import { TaskModule } from './modules/task/task.module';
+import { ExternalApiModule } from './modules/external-api/external-api.module';
+import { MathModule } from './modules/math/math.module';
 
 @Module({
-  imports: [AuthModule, BackOfficeModule, UserModule, SalesModule, TaskModule, ExternalApiModule, ConfigModule.forRoot()],
+  imports: [
+    AuthModule,
+    BackOfficeModule,
+    UserModule,
+    SalesModule,
+    TaskModule,
+    ExternalApiModule,
+    MathModule,
+    ConfigModule.forRoot()
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
