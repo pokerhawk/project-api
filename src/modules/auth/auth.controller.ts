@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Query, Post } from '@nestjs/common';
 import { AuthService, loginProps } from './auth.service';
 import { CreateUserDto } from './dto/register.dto';
 
@@ -14,7 +14,7 @@ export class AuthController {
     }
 
     @Get('isAuthenticated')
-    isAuthenticated(@Param() email: string){
+    isAuthenticated(@Query('email') email: string){
         return this.authService.isAuthenticated(email);
     }
 

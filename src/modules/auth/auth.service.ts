@@ -5,7 +5,7 @@ import { CreateUserDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { userToReturnMapper } from 'src/utils/mappers/user-to-return.mapper';
 import { TwoFactorAuthService } from './two-factor-auth.service';
-import { CepService } from 'src/services/busca-CEP/busca.cep.service';
+import { CepService, viaCepProps } from 'src/services/busca-CEP/busca.cep.service';
 import { WeatherService } from 'src/services/weather-api/weather.service';
 
 export type loginProps = {
@@ -55,7 +55,7 @@ export class AuthService {
         if(emailExists)
         throw new BadRequestException("Este email já existe")
 
-        const address = await this.cepService.searchZipCode(user.zipcode)
+        const address: viaCepProps = await this.cepService.searchZipCode(user.zipcode)
         
         await this.prisma.user.create({
             data: {
@@ -67,7 +67,7 @@ export class AuthService {
                 state: address.estado,
                 uf: address.uf,
                 city: address.localidade,
-                neighborhood: address.regiao,
+                neighborhood: address.bairro,
                 address: address.logradouro,
                 number: user.number,
                 complement: user?.complement
@@ -77,13 +77,16 @@ export class AuthService {
     }
 
     async isAuthenticated(email: string){
-        const user = await this.prisma.user.findFirst({where:{email}});
-        
+        const user = await this.prisma.user.findUnique({where:{email}});
+
         if(user.mfaEnabled){
-            return user.mfaEnabled;
+            return {
+                mfaEnabled: user.mfaEnabled
+            }
         } else {
             const qrcode = await this.twoFactorService.generateTwoFactorAuthSecret(user.email);
             return {
+                mfaEnabled: false,
                 qrcode
             };
         }
