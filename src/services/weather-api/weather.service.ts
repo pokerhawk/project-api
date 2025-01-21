@@ -60,7 +60,11 @@ export class WeatherService implements OnModuleInit {
                 }
             })
 
+            console.log(data)
             return {
+                city: data.location.name,
+                region: data.location.region,
+                country: data.location.country,
                 callsLeft: this.callsLeft,
                 title: data.current.condition.text,
                 icon: data.current.condition.icon,
