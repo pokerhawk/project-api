@@ -1,6 +1,7 @@
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
+    @IsOptional()
     @IsString()
     name: string;
 
@@ -15,14 +16,17 @@ export class CreateUserDto {
     })
     password: string;
 
+    @IsOptional()
     @IsString()
     @MinLength(8, {message: "Must have 8 numbers"})
     @MaxLength(8, {message: "Must have 8 numbers"})
     zipcode: string;
 
+    @IsOptional()
     @IsString()
     number: string;
 
+    @IsOptional()
     @IsString()
     complement?: string;
 }

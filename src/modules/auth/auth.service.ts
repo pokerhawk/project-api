@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ClientService } from 'src/client/client.service';
 import * as bcrypt from 'bcrypt'
 import { CreateUserDto } from './dto/register.dto';
@@ -40,6 +40,7 @@ export class AuthService {
         if (user && await bcrypt.compare(password, user.password)) {
             return userToReturnMapper(user);
         }
+        return;
     }
 
     async register(userPayload: CreateUserDto){
@@ -55,29 +56,38 @@ export class AuthService {
         if(emailExists)
         throw new BadRequestException("Este email já existe")
 
-        const address: viaCepProps = await this.cepService.searchZipCode(user.zipcode)
+        let address: viaCepProps;
+
+        if(user.zipcode)
+            address = await this.cepService.searchZipCode(user.zipcode)
         
         await this.prisma.user.create({
             data: {
-                name: user.name,
+                name: user.name??user.name,
                 email: user.email,
                 password: user.password,
-                zipcode: user.zipcode,
+                zipcode: user.zipcode??user.zipcode,
                 ddd: address.ddd,
                 state: address.estado,
                 uf: address.uf,
                 city: address.localidade,
                 neighborhood: address.bairro,
                 address: address.logradouro,
-                number: user.number,
-                complement: user?.complement
+                number: user.number??user.number,
+                complement: user.complement??user.complement
             }
         })
         return 'Cadastrado com sucesso!'
     }
 
-    async isAuthenticated(email: string){
-        const user = await this.prisma.user.findUnique({where:{email}});
+    async isAuthenticated(body: CreateUserDto){
+        const user = await this.prisma.user.findUnique({where:{email: body.email}});
+        const validateUser = await this.validateUser(user.email, body.password);
+
+        if(!user)
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        if(!validateUser)
+            throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
 
         if(user.mfaEnabled){
             return {
@@ -114,8 +124,6 @@ export class AuthService {
                 refresh_token: this.jwtService.sign(userJwt, { expiresIn: '60d' }),
             }
         }
-        return {
-            Error: "Codigo incorreto!"
-        }
+        throw new HttpException('Wrong code', HttpStatus.BAD_REQUEST)
     }
 }
