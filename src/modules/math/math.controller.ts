@@ -13,4 +13,18 @@ export class MathController {
     solarDeclination(){
         return this.mathService.solarDeclination();
     }
+    
+    @Get('numberToRoman')
+    numberToRoman(
+        @Query('number') number: number
+    ){
+        return this.mathService.numberToRoman(number);
+    }
+
+    @Get('romanToNumber')
+    romanToNumber(
+        @Query('numeral') numeral: string
+    ){
+        return this.mathService.romanToNumber(numeral);
+    }
 }

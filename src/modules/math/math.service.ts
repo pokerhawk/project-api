@@ -61,4 +61,46 @@ export class MathService {
             lastDeclination: lastDeclination()
         }
     }
+
+    async numberToRoman(number: number){
+        const ones = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+        const tens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
+        const hrns = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
+        const ths = ["", "M", "MM", "MMM"];
+
+        const floor = (n1:number, n2:number) => Math.floor(n1/n2);
+        return ths[floor(number, 1000)]+hrns[floor(number % 1000, 100)]+tens[floor(number % 100, 10)] + ones[number % 10];
+    }
+
+    async romanToNumber(numeral: string){
+        const romanNumerals = {
+            I: 1,
+            V: 5,
+            X: 10,
+            L: 50,
+            C: 100,
+            D: 500,
+            M: 1000
+        }
+        const numeralArray = numeral.split('');
+
+        let res = romanNumerals[numeralArray[0]];
+
+        for(let i = 1; i < numeralArray.length; i++){
+            const current = romanNumerals[numeralArray[i]];
+            const next = romanNumerals[numeralArray[i+1]];
+            if(current < next){
+                res = res + (next - current)
+                i++;
+            }
+            if(res >= current && (current >= next || next === undefined)){
+                res += current
+            }
+            if(res < current){
+                res -= current
+            }
+        }
+
+        return res<0?-res:res;
+    }
 }
