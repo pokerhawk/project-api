@@ -4,7 +4,6 @@ import axios from 'axios';
 
 @Injectable()
 export class WeatherService implements OnModuleInit {
-    
     private callsLeft: number;
     private readonly apiKey: string;
     private readonly baseURL: string = "http://api.weatherapi.com/v1";
