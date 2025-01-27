@@ -29,4 +29,12 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     complement?: string;
+
+    @IsOptional()
+    @IsString()
+    birthDate: string;
+
+    @IsOptional()
+    @IsString()
+    phone: string;
 }

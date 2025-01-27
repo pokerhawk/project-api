@@ -15,14 +15,15 @@ model User {
     name                    String
     email                   String          @unique
     password                String
-    zipcode                 String
-    ddd                     String
-    state                   String
-    uf                      String
-    city                    String
-    address                 String
+    birthDate               DateTime?
+    zipcode                 String?
+    phone                   String?
+    ddd                     String?
+    state                   String?
+    city                    String?
+    address                 String?
     neighborhood            String?
-    number                  String
+    number                  String?
     complement              String?
     commission              Int             @default(10)
     potLimit                Int             @default(20)

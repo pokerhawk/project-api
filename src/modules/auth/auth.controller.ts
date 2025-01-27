@@ -13,9 +13,9 @@ export class AuthController {
         return this.authService.register(userPayload);
     }
 
-    @Post('isAuthenticated')
-    isAuthenticated(@Body() body: CreateUserDto){
-        return this.authService.isAuthenticated(body);
+    @Get('isAuthenticated')
+    isAuthenticated(@Query('email') email: string){
+        return this.authService.isAuthenticated(email);
     }
 
     @Post('login')

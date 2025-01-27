@@ -5,7 +5,6 @@ import { CreateUserDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { userToReturnMapper } from 'src/utils/mappers/user-to-return.mapper';
 import { TwoFactorAuthService } from './two-factor-auth.service';
-import { CepService, viaCepProps } from 'src/services/busca-CEP/busca.cep.service';
 
 export type loginProps = {
     email: string;
@@ -25,7 +24,6 @@ export class AuthService {
         private readonly prisma: ClientService,
         private readonly jwtService: JwtService,
         private readonly twoFactorService: TwoFactorAuthService,
-        private readonly cepService: CepService,
     ){}
 
     validateApiKey(apiKey: string){
@@ -54,41 +52,30 @@ export class AuthService {
         if(emailExists)
         throw new BadRequestException("Este email já existe")
 
-        let address: viaCepProps;
-
-        if(user.zipcode)
-            address = await this.cepService.searchZipCode(user.zipcode)
-        
-        await this.prisma.user.create({
+        const create = await this.prisma.user.create({
             data: {
                 name: user.name??user.name,
                 email: user.email,
                 password: user.password,
-                zipcode: user.zipcode??user.zipcode,
-                ddd: address.ddd,
-                state: address.estado,
-                uf: address.uf,
-                city: address.localidade,
-                neighborhood: address.bairro,
-                address: address.logradouro,
-                number: user.number??user.number,
-                complement: user.complement??user.complement
             }
         })
+        if(create){
+            return {
+                statusCode: HttpStatus.OK,
+                message: "Registrado com sucesso!"
+            };
+        }
         return {
-            statusCode: HttpStatus.OK,
-            message: "Registrado com sucesso!"
-        };
+            statusCode: HttpStatus.BAD_REQUEST,
+            message: "Algo deu errado!"
+        }
     }
 
-    async isAuthenticated(body: CreateUserDto){
-        const user = await this.prisma.user.findUnique({where:{email: body.email}});
-        const validateUser = await this.validateUser(user.email, body.password);
+    async isAuthenticated(email: string){
+        const user = await this.prisma.user.findUnique({where:{email}});
 
         if(!user)
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-        if(!validateUser)
-            throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
 
         if(user.mfaEnabled){
             return {
@@ -105,8 +92,16 @@ export class AuthService {
 
     async login(body: loginProps){
         const user = await this.prisma.user.findUnique({where:{email: body.email}})
+        if(!user)
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
         const verifyCode = await this.twoFactorService.verifyTwoFaCode(body.code, user)
+        if(verifyCode === false)
+            throw new HttpException('Wrong code', HttpStatus.BAD_REQUEST);
+
         const validateUser = await this.validateUser(user.email, body.password);
+        if(!validateUser)
+            throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
         
         const userJwt: userJwtProps = {
             sub: validateUser.id,

@@ -1,6 +1,7 @@
-import { Controller, Delete, Get, Param, Request, Query, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Request, Query, UseGuards, Body, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { User } from 'prisma/generated/client';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -11,9 +12,10 @@ export class UserController {
     
     @Get('byId')
     getUserById(
+        @Request() req: any,
         @Query('userId') userId: string
     ){
-        return this.userService.getUserById(userId);
+        return this.userService.getUserById(req.user.id, userId);
     }
 
     @Get('all')
@@ -40,6 +42,14 @@ export class UserController {
     //     @Query('commission') commission: number){
     //     return this.userService.updateUserCommission(id, commission);
     // }
+    
+    @Post('update')
+    updateUser(
+        @Request() req: any,
+        @Body() body: Partial<User>
+    ){
+        return this.userService.updateUser(req.user.id, body);
+    }
 
     @Delete()
     softDelete(
