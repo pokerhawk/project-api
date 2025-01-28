@@ -9,6 +9,7 @@ import { SalesModule } from './modules/sales/sales.module';
 import { TaskModule } from './modules/task/task.module';
 import { ExternalApiModule } from './modules/external-api/external-api.module';
 import { MathModule } from './modules/math/math.module';
+import { EventsModule } from './modules/web-socket/events.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MathModule } from './modules/math/math.module';
     TaskModule,
     ExternalApiModule,
     MathModule,
+    EventsModule,
     ConfigModule.forRoot()
   ],
   controllers: [AppController],
