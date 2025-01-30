@@ -36,13 +36,13 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const queryParams = client.handshake.query;
     // const headers = client.handshake.headers;
     // const clientIp = client.handshake.address;
-
     const user = await this.prisma.user.findUnique({where:{id: `${queryParams.userId}`}});
 
     this.clients[client.id] = {};
     this.setName(user.name, user.id, client);
     console.log(`Client connected: ${user.id}`);
-    console.log(this.clients);
+
+    return { clientId: client.id }
   }
 
   handleDisconnect(client: Socket) {
