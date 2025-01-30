@@ -42,7 +42,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.setName(user.name, user.id, client);
     console.log(`Client connected: ${user.id}`);
 
-    return { clientId: client.id }
+    client.broadcast.emit('connection_data', { clientId: client.id })
   }
 
   handleDisconnect(client: Socket) {
