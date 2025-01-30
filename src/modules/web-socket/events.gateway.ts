@@ -25,21 +25,24 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   constructor(
     private readonly prisma: ClientService,
   ){}
-  private clients: Record<string, string> = {};
+
+  private clients: Record<string, Record<string, string>> = {};
 
   afterInit(server: Server) {
     console.log('WebSocket server initialized');
   }
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     const queryParams = client.handshake.query;
-    const headers = client.handshake.headers;
-    const clientIp = client.handshake.address;
+    // const headers = client.handshake.headers;
+    // const clientIp = client.handshake.address;
 
-    this.clients[client.id] = undefined;
+    const user = await this.prisma.user.findUnique({where:{id: `${queryParams.userId}`}});
 
-    console.log(`Client connected: ${client.id} ${this.clients[client.id]}`);
-    // console.log(this.clients)
+    this.clients[client.id] = {};
+    this.setName(user.name, user.id, client);
+    console.log(`Client connected: ${user.id}`);
+    console.log(this.clients);
   }
 
   handleDisconnect(client: Socket) {
@@ -48,18 +51,27 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
   @SubscribeMessage('message')
-  handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
+  async handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
     console.log(`Message received: ${data.message} from ${data.sender}`);
-    if(this.clients[client.id] === undefined)
-      this.setName(data.sender, client);
-    client.broadcast.emit('message', data); // Broadcast the message to all other clients
-    return { event: 'message', data }; // Optionally send an acknowledgment back to the sender
+    const senderName = this.clients[client.id].name;
+    const message = {
+      sender: senderName,
+      message: data.message
+    }
+
+    // Broadcast the message to all other clients
+    client.broadcast.emit('message', message);
+
+    // Optionally send an acknowledgment back to the sender
+    // return { event: 'message', data: message };
+    return;
   }
 
   @SubscribeMessage('setName')
-  setName(@MessageBody() name: string, @ConnectedSocket() client: Socket) {
-    this.clients[client.id] = name;
-    console.log(`Client ${client.id} set name to: ${name}`);
+  setName(@MessageBody() name: string, @MessageBody() userId: string, @ConnectedSocket() client: Socket) {
+    const user = this.clients[client.id];
+    user.userId = userId;
+    user.name = name;
     client.emit('nameSet', { id: client.id, name });
   }
 }
