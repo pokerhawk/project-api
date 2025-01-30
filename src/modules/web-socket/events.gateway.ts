@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -37,12 +38,12 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     // const headers = client.handshake.headers;
     // const clientIp = client.handshake.address;
     const user = await this.prisma.user.findUnique({where:{id: `${queryParams.userId}`}});
+    if(!user)
+      throw new BadRequestException("User not found");
 
     this.clients[client.id] = {};
     this.setName(user.name, user.id, client);
     console.log(`Client connected: ${user.id}`);
-
-    client.broadcast.emit('connection_data', { clientId: client.id })
   }
 
   handleDisconnect(client: Socket) {
@@ -51,7 +52,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
   @SubscribeMessage('message')
-  async handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
+  handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
     console.log(`Message received: ${data.message} from ${data.sender}`);
     const senderName = this.clients[client.id].name;
     const message = {
