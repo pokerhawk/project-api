@@ -56,6 +56,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const senderName = this.clients[client.id].name;
     const message = {
       sender: senderName,
+      senderClientId: client.id,
       message: data.message
     }
 
@@ -63,8 +64,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     client.broadcast.emit('message', message);
 
     // Optionally send an acknowledgment back to the sender
-    // return { event: 'message', data: message };
-    return;
+    return { event: 'message', data: message };
   }
 
   @SubscribeMessage('setName')
