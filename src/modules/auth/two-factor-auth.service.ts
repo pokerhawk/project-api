@@ -41,4 +41,12 @@ export class TwoFactorAuthService {
       secret: user.mfaSecret,
     });
   }
+
+  async generate2FaCode(email: string){
+    const user = await this.prisma.user.findUnique({
+      where:{email}
+    });
+
+    return authenticator.generate(user.mfaSecret);
+  }
 }

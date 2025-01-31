@@ -42,4 +42,11 @@ export class BackOfficeController {
     ){
         return this.backOfficeService.manualVerify2FA(req.user.id, body);
     }
+
+    @Get('manual2FaCode')
+    manual2FaCode(
+        @Query('email') email: string
+    ){
+        return this.backOfficeService.manualGenerate2FaCode(email);
+    }
 }

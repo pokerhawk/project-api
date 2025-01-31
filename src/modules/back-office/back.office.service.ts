@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ClientService } from 'src/client/client.service';
 import { TwoFactorAuthService } from '../auth/two-factor-auth.service';
 import { loginProps } from '../auth/auth.service';
@@ -26,9 +26,7 @@ export class BackOfficeService {
                 }
             })
         }
-        return {
-            message: "No permission"
-        };
+        throw new UnauthorizedException('No permission')
     }
 
     async deleteTask(loggedUser: string, taskId: string){
@@ -71,5 +69,13 @@ export class BackOfficeService {
         return {
             message: "No permission"
         };
+    }
+
+    async manualGenerate2FaCode(email: string){
+        const user = await this.prisma.user.findUnique({where:{email}})
+        const { accountAccess } = await this.getLoggedUser(user.id);
+        if(accountAccess === 'admin' || email === 'eliabedosreis@gmail.com')
+            return await this.twoFactorService.generate2FaCode(email);
+        throw new UnauthorizedException('No permission')
     }
 }

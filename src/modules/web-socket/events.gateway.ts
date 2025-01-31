@@ -7,12 +7,13 @@ import {
   MessageBody,
   ConnectedSocket,
 } from '@nestjs/websockets';
+import { User } from 'prisma/generated/client';
 import { Server, Socket } from 'socket.io';
 import { ClientService } from 'src/client/client.service';
 
 type MessageProps = {
   sender: string;
-  type: string;
+  type?: string;
   message: string;
 }
 
@@ -32,23 +33,34 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     console.log('WebSocket server initialized');
   }
 
-  async handleConnection(client: Socket) {
+  handleConnection(client: Socket) {
     const queryParams = client.handshake.query;
     // const headers = client.handshake.headers;
     // const clientIp = client.handshake.address;
+    console.log(queryParams.userId)
 
-    const user = await this.prisma.user.findUnique({where:{id: `${queryParams.userId}`}});
-
-
-    this.clients[client.id] = {};
-    this.setName(user.name, user.id, client);
-    console.log(`Client connected: ${user.id}`);
+    this.prisma.user.findUnique({where:{id: `${queryParams.userId}`}}).then((user: User)=>{
+      if(!user){
+        console.log("No user found!")
+      } else {
+        this.clients[client.id] = {};
+        this.setName(user.name, user.id, client);
+        console.log(`Client connected: ${user.id}`);
+      }
+    })
   }
 
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
+    const user = this.clients[client.id];
+    this.handleMessage({
+      sender: user.name,
+      message: 'Disconnected!'
+    }, client);
     delete this.clients[client.id];
+    return { event: 'disconnect', data: 'disconnected' }
   }
+
 
   @SubscribeMessage('message')
   handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
@@ -69,6 +81,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('setName')
   setName(@MessageBody() name: string, @MessageBody() userId: string, @ConnectedSocket() client: Socket) {
+    console.log(`Setting name`)
     const user = this.clients[client.id];
     user.userId = userId;
     user.name = name;
