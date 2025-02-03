@@ -17,6 +17,13 @@ type MessageProps = {
   message: string;
 }
 
+type PrivateMessageProps = {
+  sender: string;
+  to: string;
+  type?: string;
+  message: string;
+}
+
 @WebSocketGateway({
   cors: {
     origin: '*', // Replace with your allowed origin(s)
@@ -61,7 +68,6 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     return { event: 'disconnect', data: 'disconnected' }
   }
 
-
   @SubscribeMessage('message')
   handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
     console.log(`Message received: ${data.message} from ${data.sender}`);
@@ -79,6 +85,24 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     return { event: 'message', data: message };
   }
 
+  @SubscribeMessage('private_message')
+  handlePrivateMessage(@MessageBody() data: PrivateMessageProps, @ConnectedSocket() client: Socket) {
+    console.log(`Message received: ${data.message} from ${data.sender} to ${data.to}`);
+    console.log(this.clients);
+    const senderName = this.clients[client.id].name;
+    const message = {
+      sender: senderName,
+      senderClientId: client.id,
+      message: data.message
+    }
+
+    // Emit the message to a specific client
+    client.to(data.to).emit('private_message', message);
+
+    // Optionally send an acknowledgment back to the sender
+    return { event: 'message', data: message };
+  }
+
   @SubscribeMessage('setName')
   setName(@MessageBody() name: string, @MessageBody() userId: string, @ConnectedSocket() client: Socket) {
     console.log(`Setting name`)
@@ -87,5 +111,11 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     user.name = name;
     client.emit('nameSet', { id: client.id, name });
   }
-}
 
+  @SubscribeMessage('users')
+  getUsers(@ConnectedSocket() client: Socket) {
+    console.log(`Sending connected users`);
+    client.emit('users', this.clients);;
+    client.to(client.id).emit('users', this.clients);;
+  }
+}
