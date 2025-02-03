@@ -48,17 +48,16 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     this.prisma.user.findUnique({where:{id: `${queryParams.userId}`}}).then((user: User)=>{
       if(!user){
-        console.log("No user found!")
+        console.log("Can't connect, no user found!")
       } else {
         this.clients[client.id] = {};
         this.setName(user.name, user.id, client);
-        console.log(`Client connected: ${user.id}`);
+        this.getClients(client);
       }
     })
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
     const user = this.clients[client.id];
     this.handleMessage({
       sender: user.name,
@@ -70,12 +69,12 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('message')
   handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
-    console.log(`Message received: ${data.message} from ${data.sender}`);
     const senderName = this.clients[client.id].name;
     const message = {
       sender: senderName,
       senderClientId: client.id,
-      message: data.message
+      message: data.message,
+      date: new Date()
     }
 
     // Broadcast the message to all other clients
@@ -87,13 +86,12 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('private_message')
   handlePrivateMessage(@MessageBody() data: PrivateMessageProps, @ConnectedSocket() client: Socket) {
-    console.log(`Message received: ${data.message} from ${data.sender} to ${data.to}`);
-    console.log(this.clients);
     const senderName = this.clients[client.id].name;
     const message = {
       sender: senderName,
       senderClientId: client.id,
-      message: data.message
+      message: data.message,
+      date: new Date()
     }
 
     // Emit the message to a specific client
@@ -105,17 +103,17 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('setName')
   setName(@MessageBody() name: string, @MessageBody() userId: string, @ConnectedSocket() client: Socket) {
-    console.log(`Setting name`)
     const user = this.clients[client.id];
     user.userId = userId;
     user.name = name;
     client.emit('nameSet', { id: client.id, name });
   }
 
-  @SubscribeMessage('users')
-  getUsers(@ConnectedSocket() client: Socket) {
-    console.log(`Sending connected users`);
-    client.emit('users', this.clients);;
-    client.to(client.id).emit('users', this.clients);;
+  @SubscribeMessage('clients')
+  getClients(@ConnectedSocket() client: Socket) {
+    console.log(typeof this.clients);
+    console.log(this.clients);
+    client.broadcast.emit('clients', this.clients);;
+    // client.to(client.id).emit('users', this.clients);;
   }
 }
