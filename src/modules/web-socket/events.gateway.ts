@@ -44,7 +44,6 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const queryParams = client.handshake.query;
     // const headers = client.handshake.headers;
     // const clientIp = client.handshake.address;
-    console.log(queryParams.userId)
 
     this.prisma.user.findUnique({where:{id: `${queryParams.userId}`}}).then((user: User)=>{
       if(!user){
@@ -60,16 +59,17 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   handleDisconnect(client: Socket) {
     const user = this.clients[client.id];
     this.handleMessage({
-      sender: user.name,
+      sender: user.userName,
       message: 'Disconnected!'
     }, client);
     delete this.clients[client.id];
+    this.getClients(client);
     return { event: 'disconnect', data: 'disconnected' }
   }
 
   @SubscribeMessage('message')
   handleMessage(@MessageBody() data: MessageProps, @ConnectedSocket() client: Socket) {
-    const senderName = this.clients[client.id].name;
+    const senderName = this.clients[client.id].userName;
     const message = {
       sender: senderName,
       senderClientId: client.id,
@@ -86,7 +86,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage('private_message')
   handlePrivateMessage(@MessageBody() data: PrivateMessageProps, @ConnectedSocket() client: Socket) {
-    const senderName = this.clients[client.id].name;
+    const senderName = this.clients[client.id].userName;
     const message = {
       sender: senderName,
       senderClientId: client.id,
@@ -105,15 +105,15 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   setName(@MessageBody() name: string, @MessageBody() userId: string, @ConnectedSocket() client: Socket) {
     const user = this.clients[client.id];
     user.userId = userId;
-    user.name = name;
+    user.userName = name;
     client.emit('nameSet', { id: client.id, name });
   }
 
   @SubscribeMessage('clients')
   getClients(@ConnectedSocket() client: Socket) {
-    console.log(typeof this.clients);
-    console.log(this.clients);
-    client.broadcast.emit('clients', this.clients);;
-    // client.to(client.id).emit('users', this.clients);;
+    //Broadcast to everyone else
+    client.broadcast.emit('clients', this.clients);
+    //Emit back to itself
+    client.emit('clients', this.clients);
   }
 }
